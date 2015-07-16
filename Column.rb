@@ -9,7 +9,6 @@ class Column
     @column = self
     self.find_squares_that_contain_column
     self.find_spots_that_contain_column(@column_squares)
-
   end
 
   def find_squares_that_contain_column

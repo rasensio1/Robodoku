@@ -10,14 +10,11 @@ class Spot
     @square = square
     @row = 0
     @column = 0
-    @square_hash_of_possibilities = Hash.new
-    @row_hash_of_possibilities = Hash.new
-    @column_hash_of_possibilities = Hash.new
   end
 
   def update_value
     self.update_possible_values
-    if possible_values.size == 1
+    if @possible_values.size == 1
       @value = possible_values[0]
     end
   end
@@ -29,9 +26,6 @@ class Spot
       self.check_row
       self.check_column
       self.check_square
-      # self.check_square_hash
-      # self.check_row_hash
-      # self.check_column_hash
     end
   end
 
@@ -50,25 +44,25 @@ class Spot
     @square.spots.each do |row|
       row.each do |spot|
         spot.possible_values.each do |value|
-          if @square_hash_of_possibilities[value] == nil
-            @square_hash_of_possibilities[value] = [spot]
+          if square_hash[value] == nil
+            square_hash[value] = [spot]
           else
-            @square_hash_of_possibilities[value] << spot
+            square_hash[value] << spot
           end
         end
       end
     end
+    square_hash
   end
 
   def check_square_hash
-    self.square_hash_of_possibilities
-    @square_hash_of_possibilities.each do |value, spots|
+    self.square_hash_of_possibilities.each do |value, spots|
       if spots.size == 1
         spots[0].value = value
+        spots[0].possible_values = []
       end
     end
   end
-
 
 
   def check_row
@@ -94,10 +88,10 @@ class Spot
   end
 
   def check_row_hash
-    self.row_hash_of_possibilities
-    @row_hash_of_possibilities.each do |value, spots|
+    self.row_hash_of_possibilities.each do |value, spots|
       if spots.size == 1
         spots[0].value = value
+        spots[0].possible_values = []
       end
     end
   end
@@ -126,12 +120,11 @@ class Spot
   end
 
   def check_column_hash
-    self.column_hash_of_possibilities
-    @column_hash_of_possibilities.each do |value, spots|
+    self.column_hash_of_possibilities.each do |value, spots|
       if spots.size == 1
         spots[0].value = value
+        spots[0].possible_values = []
       end
     end
   end
-
 end

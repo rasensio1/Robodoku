@@ -1,10 +1,8 @@
 require './board'
 require 'pry'
 
-class Solver
-  attr_reader :input_file                        # => nil
-  attr_accessor :input, :board, :rows, :columns, :solved_puzzle
-  attr_writer :output_file  # => nil
+class Solver                    # => nil # => nil
+
   def initialize(puzzle)
     @input_file = File.open("./#{puzzle}", "r")  # ~> Errno::ENOENT: No such file or directory @ rb_sysopen - ./input.txt
     @output_file = File.open("./output.txt", "w")
@@ -13,11 +11,13 @@ class Solver
     @columns = []
     @solved_puzzle = []
     @board = Board.new
+    @all_spots = []
     self.converts_input_to_arrays
     self.converts_input_arrays_to_nested_array
     self.makes_nested_arrays_9_elements_long
     self.creates_rows
     self.creates_columns
+    self.create_all_spots_holder
     self.maps_input_values_to_spots
     self.updates_all_spots
     self.create_solved_values_array
@@ -57,9 +57,11 @@ class Solver
       elsif line.size > 9
         line.pop
       end
+
       until line.size == 9 do
         line << " "
       end
+
     end
   end
 
@@ -71,21 +73,23 @@ class Solver
     end
   end
 
+  def create_all_spots_holder
+    0.upto(8) do |row|
+      0.upto(8) do |element|
+        @all_spots << @rows[row].row_spots[element]
+      end
+    end
+  end
+
   def updates_all_spots
     20.times do
       10.times do
-        for row in 0..8
-          for element in 0..8
-            @rows[row].row_spots[element].update_value
-          end
-        end
+        @all_spots.each {|spot| spot.update_value }
       end
-      for row in 0..8
-        for element in 0..8
-          @rows[row].row_spots[element].check_square_hash
-          @rows[row].row_spots[element].check_row_hash
-          @rows[row].row_spots[element].check_column_hash
-        end
+      @all_spots.each do |spot|
+          spot.check_square_hash
+          spot.check_row_hash
+          spot.check_column_hash
       end
     end
   end
